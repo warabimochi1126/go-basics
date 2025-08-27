@@ -1,14 +1,18 @@
-// goのファイルは何かしらのpackageに属する必要がある
-// main packageは初期状態から存在する
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"go-basics/calculator"
+	"os"
 
-// main関数はファイル実行時に勝手に実行される関数
+	"github.com/joho/godotenv"
+)
+
+// .envの内容を出力する
 func main() {
-	fmt.Println("hello world")
-	sl := []int{1, 2, 3}
-	if len(sl) < 0 {
-		fmt.Println("unreachable code")
-	}
+	godotenv.Load()
+	fmt.Println(os.Getenv("GO_ENV"))
+	fmt.Println(calculator.Offset)
+	fmt.Println(calculator.Sum(1, 2))
+	fmt.Println(calculator.Multiply(1, 2))
 }
