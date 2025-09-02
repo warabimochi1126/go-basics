@@ -1,42 +1,54 @@
 package main
 
-// constは定数宣言
-const secret int = 100
-
-type Os int
-
-// 連番の生成
-const (
-	Mac Os = iota + 1
-	Windows
-	Linux
+import (
+	"fmt"
+	"unsafe"
 )
 
-// 複数の変数定義
-var (
-	i int
-	s string
-	b bool
-) // i ⇒ 0 s ⇒ "" b ⇒ false
-
 func main() {
-	// // # 初期化しなかった場合、型のfalsyな値が挿入される
-	// var i int
-	// // # varでも初期化できる
-	// var i int = 2
-	// // # varで型省略すると代入値から型推論される
-	// var i = 3
-	// # := は初期化によって型推論される
-	// i := 1 // i(int) ⇒ 1
-	// # キャストすることで型を付けられる
-	// ui := uint16(2)
+	// uint16 ⇒ 2byteのデータ型
+	var ui1 uint16
+	// 変数の先頭メモリアドレスを取得する ⇒ &を付ける
+	fmt.Println("ui1 address", &ui1)
+	// メモリアドレスの先頭が2Byteズレている事からuint16が2Byteのデータ型であることが分かる
+	var ui2 uint16
+	fmt.Println("ui2 address", &ui2)
 
-	// Printfは書式を指定して出力する
-	// %vは値の表示・%Tは型の表示
-	// fmt.Printf("i: %v %T\n", i, ui)
-	// fmt.Printf("i: %[1]v %[1]T ui: %[2]v %[2]T", i, ui)
+	// ポインタ変数は変数の先頭メモリアドレスを持っている
+	// 型を指定するのは、先頭アドレスから何byte分かを指定するため
+	var p1 *uint16
+	fmt.Println("p1 address", p1)
+	p1 = &ui1
+	fmt.Println("p1 address", p1)
+	fmt.Println("p1 size", unsafe.Sizeof(p1))
+	fmt.Println("p1 oneself address:", &p1)
+	// ポインタ変数が指すメモリアドレスの値を取得する(dereference)
+	fmt.Println("p1 pointer next value", *p1)
+	*p1 = 1
+	fmt.Println("ui1 value", ui1)
 
-	// # 複数個の変数を一気に初期化することが出来る
-	// pi, title := 3.14, "go"
-	// fmt.Printf("pi: %v title: %v", pi, title)
+	// ダブルポインタ ⇒ ポインタ変数が更にポインタを持つ状態
+	var pp1 **uint16 = &p1
+	fmt.Println("pp1 value", pp1)
+	fmt.Println("pp1 address", &pp1)
+	fmt.Println("pp1 size", unsafe.Sizeof(pp1))
+
+	fmt.Println("pp1 one dereference", *pp1)
+	fmt.Println("pp1 two dereference", **pp1)
+
+	**pp1 = 10
+	fmt.Println("ui1 value", ui1)
+
+	// shadowing ⇒ 別のスコープで変数を再定義することで、外側の変数にアクセスできなくする手法
+	ok, result := true, "A"
+	fmt.Println("outer result pointer", &result)
+	if ok {
+		result = "B"
+		fmt.Println("innner result pointer", &result)
+		println(result)
+	} else {
+		result := "C"
+		println(result)
+	}
+	println(result)
 }
