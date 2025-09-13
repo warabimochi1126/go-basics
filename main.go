@@ -83,4 +83,26 @@ func main() {
 	s5[3] = 9
 	fmt.Println("s5:", s5, len(s5), cap(s5))
 	fmt.Println("fs6:", fs6, len(fs6), cap(fs6))
+
+	// 	map ⇒ 連想配列
+	var m1 map[string]int
+	m2 := map[string]int{}
+	fmt.Println(m1, m1 == nil)
+	fmt.Println(m2, m2 == nil)
+	m2["A"] = 10
+	m2["B"] = 20
+	m2["C"] = 0
+	fmt.Println(m2, len(m2), m2["A"])
+
+	delete(m2, "A")
+	fmt.Println(m2, len(m2), m2["A"])
+
+	value, ok := m2["A"]
+	fmt.Println(value, ok)
+	value, ok = m2["C"]
+	fmt.Println(value, ok)
+
+	for key, value := range m2 {
+		fmt.Println(key, value)
+	}
 }
