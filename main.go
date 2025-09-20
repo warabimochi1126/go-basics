@@ -3,27 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	// // スライス ⇒ 可変長配列
-	// var slice1 []int
-	// slice2 := []int{}
-	// fmt.Println("slice1:", slice1)
-	// fmt.Println("slice2:", slice2)
-
-	// // var := のどちらかによってslice
-	// fmt.Println(slice1 == nil)
-	// fmt.Println(slice2 == nil)
-
-	// // appendで要素を追加
-	// slice1 = append(slice1, 1, 2, 3)
-	// fmt.Println("slice1:", slice1)
-
-	// // 引数に展開する
-	// slice3 := []int{4, 5, 6}
-	// slice1 = append(slice1, slice3...)
-	// fmt.Println(slice1)
-	// fmt.Println("slice1:", slice1, len(slice1), cap(slice1))
-
-	// // makeで配列を作成する
+	// makeでスライスを作成する
 	slice4 := make([]int, 0, 2)
 	fmt.Println("slice4:", slice4, len(slice4), cap(slice4))
 	slice4 = append(slice4, 1, 2, 3, 4)
@@ -32,15 +12,20 @@ func main() {
 	slice5 := make([]int, 4, 6)
 	fmt.Println("slice5:", slice5, len(slice5), cap(slice5))
 
-	// // スライスから分割してスライスを作成する
-	// s6 := slice5[1:3]
-	// s6[1] = 10
-	// fmt.Println("slice5:", slice5, len(slice5), cap(slice5))
-	// fmt.Println("s6:", s6, len(s6), cap(s6))
+	testSlice := make([]int, 1, 3)
+	fmt.Println("testSlice:", testSlice, len(testSlice), cap(testSlice))
+	testSlice = append(testSlice, 3, 4, 5)
+	fmt.Println("append After TestSlice:", testSlice, len(testSlice), cap(testSlice))
 
-	// s6 = append(s6, 2)
+	// // スライスから分割してスライスを作成する
+	// slice6 := slice5[1:3]
+	// slice6[1] = 10
+	// fmt.Println("slice5:", slice5, len(slice5), cap(slice5))
+	// fmt.Println("slice6:", slice6, len(slice6), cap(slice6))
+
+	// slice6 = append(slice6, 2)
 	// fmt.Println("slice5 after append:", slice5, len(slice5), cap(slice5))
-	// fmt.Println("s6 after append:", s6, len(s6), cap(s6))
+	// fmt.Println("slice6 after append:", slice6, len(slice6), cap(slice6))
 
 	// fmt.Println("slice5 length:", len(slice5[1:3]))
 
@@ -57,17 +42,17 @@ func main() {
 	// fmt.Println("sc6:", sc6, len(sc6), cap(sc6))
 
 	// slice5 = make([]int, 4, 6)
-	// fs6 := slice5[1:3:3]
+	// fslice6 := slice5[1:3:3]
 	// fmt.Println("slice5:", slice5, len(slice5), cap(slice5))
-	// fmt.Println("fs6:", fs6, len(fs6), cap(fs6))
-	// fs6[0] = 6
-	// fs6[1] = 7
-	// fs6 = append(fs6, 8)
+	// fmt.Println("fslice6:", fslice6, len(fslice6), cap(fslice6))
+	// fslice6[0] = 6
+	// fslice6[1] = 7
+	// fslice6 = append(fslice6, 8)
 	// fmt.Println("slice5:", slice5, len(slice5), cap(slice5))
-	// fmt.Println("fs6:", fs6, len(fs6), cap(fs6))
+	// fmt.Println("fslice6:", fslice6, len(fslice6), cap(fslice6))
 	// slice5[3] = 9
 	// fmt.Println("slice5:", slice5, len(slice5), cap(slice5))
-	// fmt.Println("fs6:", fs6, len(fs6), cap(fs6))
+	// fmt.Println("fslice6:", fslice6, len(fslice6), cap(fslice6))
 
 	// // 	map ⇒ 連想配列
 	// var m1 map[string]int
