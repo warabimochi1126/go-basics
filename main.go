@@ -3,31 +3,20 @@ package main
 import "fmt"
 
 func main() {
-	// makeでスライスを作成する
-	slice4 := make([]int, 0, 2)
-	fmt.Println("slice4:", slice4, len(slice4), cap(slice4))
-	slice4 = append(slice4, 1, 2, 3, 4)
-	fmt.Println("slice4:", slice4, len(slice4), cap(slice4))
-
 	slice5 := make([]int, 4, 6)
 	fmt.Println("slice5:", slice5, len(slice5), cap(slice5))
 
-	testSlice := make([]int, 1, 3)
-	fmt.Println("testSlice:", testSlice, len(testSlice), cap(testSlice))
-	testSlice = append(testSlice, 3, 4, 5)
-	fmt.Println("append After TestSlice:", testSlice, len(testSlice), cap(testSlice))
+	// スライスから分割してスライスを作成する
+	slice6 := slice5[1:3]
+	slice6[1] = 10
+	fmt.Println("slice5:", slice5, len(slice5), cap(slice5))
+	fmt.Println("slice6:", slice6, len(slice6), cap(slice6))
 
-	// // スライスから分割してスライスを作成する
-	// slice6 := slice5[1:3]
-	// slice6[1] = 10
-	// fmt.Println("slice5:", slice5, len(slice5), cap(slice5))
-	// fmt.Println("slice6:", slice6, len(slice6), cap(slice6))
+	slice6 = append(slice6, 2)
+	fmt.Println("slice5 after append:", slice5, len(slice5), cap(slice5))
+	fmt.Println("slice6 after append:", slice6, len(slice6), cap(slice6))
 
-	// slice6 = append(slice6, 2)
-	// fmt.Println("slice5 after append:", slice5, len(slice5), cap(slice5))
-	// fmt.Println("slice6 after append:", slice6, len(slice6), cap(slice6))
-
-	// fmt.Println("slice5 length:", len(slice5[1:3]))
+	fmt.Println("slice5 length:", len(slice5[1:3]))
 
 	// // コピーの使い方
 	// sc6 := make([]int, len(slice5[1:3]))
