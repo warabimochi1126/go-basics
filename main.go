@@ -1,23 +1,6 @@
 package main
 
-import "fmt"
-
 func main() {
-	slice5 := make([]int, 4, 6)
-	fmt.Println("slice5:", slice5, len(slice5), cap(slice5))
-
-	// スライスから分割してスライスを作成する
-	slice6 := slice5[1:3]
-	slice6[1] = 10
-	fmt.Println("slice5:", slice5, len(slice5), cap(slice5))
-	fmt.Println("slice6:", slice6, len(slice6), cap(slice6))
-
-	slice6 = append(slice6, 2)
-	fmt.Println("slice5 after append:", slice5, len(slice5), cap(slice5))
-	fmt.Println("slice6 after append:", slice6, len(slice6), cap(slice6))
-
-	fmt.Println("slice5 length:", len(slice5[1:3]))
-
 	// // コピーの使い方
 	// sc6 := make([]int, len(slice5[1:3]))
 	// fmt.Println("slice5 copy:", slice5, len(slice5), cap(slice5))
