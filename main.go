@@ -1,53 +1,95 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"os"
+	"strings"
+)
 
-type Task struct {
-	Title    string
-	Estimate int
+// deferを付けると関数実行終了時に実行される.複数ある場合はLIFOで実行される
+func funcDefer() {
+	defer fmt.Println("main func final-finish")
+	defer fmt.Println("main func semi-finish")
+	fmt.Println("hello world")
+}
+
+// 引数の型に...をつけるとsliceとして受け取る
+func trimExtention(files ...string) []string {
+	out := make([]string, 0, len(files))
+	for _, file := range files {
+		out = append(out, strings.TrimSuffix(file, ".csv"))
+	}
+	return out
+}
+
+// 戻り値を複数返す時は、タプルみたいに書く
+func fileChecker(name string) (string, error) {
+	f, err := os.Open(name)
+	if err != nil {
+		return "", errors.New("file not Found")
+	}
+	defer f.Close()
+	return name, nil
+}
+
+// 無名関数を引数として受け取る
+func addExtention(f func(file string) string, name string) {
+	fmt.Println(f(name))
+}
+
+// 戻り値で関数を返す
+func multiply() func(int) int {
+	return func(n int) int {
+		return n * 1000
+	}
+}
+
+func countUp() func(int) int {
+	count := 0
+	return func(n int) int {
+		count += n
+		return count
+	}
 }
 
 func main() {
-	task1 := Task{
-		Title:    "Learn Golang",
-		Estimate: 3,
+	funcDefer()
+
+	files := []string{"file1.csv", "file2.csv", "flie3.csv"}
+	// スプレッド演算子でsliceを展開し、複数の文字列として渡せる
+	fmt.Println(trimExtention(files...))
+
+	name, err := fileChecker("file.txt")
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
-	task1.Title = "Learning Go"
-	fmt.Println(task1, task1.Title)
+	fmt.Println(name)
 
-	var task2 Task = task1
-	fmt.Println(task2)
-	task2.Title = "new"
-	fmt.Println(task2, "task1.title:", task1.Title, "task2.title:", task2.Title)
-
-	task1Pointer := &Task{
-		Title:    "Learn concurrency",
-		Estimate: 2,
+	// 無名関数の作り方
+	i := 1
+	func(i int) {
+		fmt.Println(i)
+	}(i)
+	// 無名関数を変数に代入出来る.アロー関数を変数に代入する感覚
+	f1 := func(i int) int {
+		return i + 1
 	}
-	fmt.Println(task1Pointer, *task1Pointer)
-	task1Pointer.Title = "Changed"
-	fmt.Println(*task1Pointer)
+	fmt.Println(f1(i))
 
-	var task2Pointer *Task = task1Pointer
-	task2Pointer.Title = "Changed by Task2"
-	fmt.Println(*task2Pointer)
-	fmt.Println(*task1Pointer)
+	f2 := func(file string) string {
+		return file + ".csv"
+	}
+	addExtention(f2, "file2")
 
-	task1.extendEstimate()
-	fmt.Println("task1 estimate:", task1.Estimate)
-	task1.extendEstimatePointer()
-	fmt.Println("task1 estimate:", task1.Estimate)
-}
+	// 関数を戻り値として受け取る
+	f3 := multiply()
+	fmt.Println(f3(2))
 
-// 値レシーバーを持つメソッド
-// 特定の型の実体に対してメソッドを追加出来る
-// 値レシーバーの引数は値渡しなので、元の構造体に影響を与えない
-func (task Task) extendEstimate() {
-	task.Estimate += 10
-}
-
-// ポインターレシーバーを持つメソッド
-// ポインターレシーバーの引数は参照渡しなので、元の構造体に影響を与える
-func (taskp *Task) extendEstimatePointer() {
-	taskp.Estimate += 10
+	f4 := countUp()
+	for i := 1; i <= 5; i++ {
+		v := f4(2)
+		fmt.Println(v)
+	}
 }
