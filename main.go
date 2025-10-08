@@ -1,69 +1,57 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"os"
+
+	"golang.org/x/exp/constraints"
 )
 
-var ErrCustom = errors.New("not found")
-
-func main() {
-	// errors.NewでErrorオブジェクトを作る
-	// error01 := errors.New("something wrong")
-	// fmt.Println("error01 value:", error01)
-	// fmt.Println("error01 type:", reflect.TypeOf(error01))
-
-	// error02 := errors.New("something wrong")
-	// fmt.Println("error pointer match:", error01 == error02)
-	// fmt.Println("error01 pointer address:", &error01)
-	// fmt.Println("error02 pointer address:", &error02)
-
-	// fmt.ErrorfでErrorオブジェクトを作る
-	// errorOf := fmt.Errorf("aiueo")
-	// fmt.Println("errorOf value:", errorOf)
-	// fmt.Println("errorOf type:", reflect.TypeOf(errorOf))
-	// fmt.Errorfは%wでエラーをラップする
-	// errorWrap := fmt.Errorf("twoHikisuu=%w", errorOf)
-	// fmt.Println("errorWrap value:", errorWrap)
-	// fmt.Println("errorWrap type:", reflect.TypeOf(errorWrap))
-	// %vだとエラーをラップしない
-	// errorNoWrap := fmt.Errorf("No Wrap=%v", errorOf)
-	// fmt.Println("errorNoWrap value:", errorNoWrap)
-	// fmt.Println("errorNoWrap type:", reflect.TypeOf(errorNoWrap))
-
-	// ラップしたエラーの元エラーを辿る ⇒ あれば返ってくる.無ければnil
-	// fmt.Println("unWrap errorOf:", errors.Unwrap(errorOf))
-	// fmt.Println("unWrap errorWrap:", errors.Unwrap(errorWrap))
-	// fmt.Println("unWrap errorNoWrap:", errors.Unwrap(errorNoWrap))
-
-	// センチネルエラー ⇒ 予め定義されているerrorString構造体
-	// sentinelErrorWrap := fmt.Errorf("in repository layer: %w", ErrCustom)
-	// fmt.Println("sentinelErrorWrap:", sentinelErrorWrap)
-	// fmt.Println("sentinelErrorWrap Type:", reflect.TypeOf(sentinelErrorWrap))
-
-	// sentinelErrorWrap = fmt.Errorf("in service layer: %w", sentinelErrorWrap)
-	// fmt.Println("sentinelErrorWrap:", sentinelErrorWrap)
-	// fmt.Println("sentinelErrorWrap Type:", reflect.TypeOf(sentinelErrorWrap))
-
-	// fmt.Println("error matched?:", errors.Is(sentinelErrorWrap, ErrCustom))
-
-	file := "dummy.txt"
-	fileCheckerError := fileChecker(file)
-	if fileCheckerError != nil {
-		if errors.Is(fileCheckerError, os.ErrNotExist) {
-			fmt.Println("%v file not found\n", file)
-		} else {
-			fmt.Println("unknown error")
-		}
-	}
+// 型に~を付けると、その型を基底型とした独自の型も許容する
+// ex) この場合int型を基底型とした独自の型も許容する
+type customConstraints interface {
+	~int | int16 | float32 | float64 | string
 }
 
-func fileChecker(name string) error {
-	f, err := os.Open(name)
-	if err != nil {
-		return fmt.Errorf("in checker: %w", err)
+// int型を基底型として独自の型を定義
+type NewInt int
+
+func add[T customConstraints](x, y T) T {
+	return x + y
+}
+
+func min[T constraints.Ordered](x, y T) T {
+	if x < y {
+		return x
 	}
-	defer f.Close()
-	return nil
+	return y
+}
+func sumValues[K int | string, V constraints.Float | constraints.Integer](m map[K]V) V {
+	var sum V
+	for _, v := range m {
+		sum += v
+	}
+	return sum
+}
+
+func main() {
+	fmt.Println(add(1, 2))
+	fmt.Println(add(1.1, 2.1))
+	fmt.Println(add("file", ".txt"))
+
+	var int1, int2 NewInt = 3, 4
+	fmt.Println(add(int1, int2))
+	fmt.Println(min(int1, int2))
+
+	m1 := map[string]uint{
+		"A": 1,
+		"B": 2,
+		"C": 3,
+	}
+	m2 := map[int]float32{
+		1: 1.23,
+		2: 4.56,
+		3: 7.89,
+	}
+	fmt.Println(sumValues(m1))
+	fmt.Println(sumValues(m2))
 }
