@@ -1,0 +1,2 @@
+WARN:main.go:22: warning A
+ERROR:main.go:23: critical Error
